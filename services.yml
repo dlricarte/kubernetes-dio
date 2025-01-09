@@ -6,14 +6,12 @@ spec:
   selector:
     app: php
   ports:
-  - port: 80
-    targetPort: 80
-  type: LoadBalancer
-  loadBalancerIP: 192.168.50.100 # Altere para um IP do intervalo configurado no MetalLB
-
-
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30081
+  type: NodePort
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,9 +20,22 @@ spec:
   selector:
     app: mysql
   ports:
-  - port: 3306
-    targetPort: 3306
-  type: LoadBalancer
-  loadBalancerIP: 192.168.50.99 # Altere para outro IP do intervalo configurado no MetalLB
-
-
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+      nodePort: 30082
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+  type: NodePort

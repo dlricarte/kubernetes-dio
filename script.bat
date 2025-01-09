@@ -1,19 +1,14 @@
-echo "Criando as imagens........"
-
+echo "Criando imagens Docker..."
 docker build -t dlricarte/projeto-backend:1.0 backend/.
 docker build -t dlricarte/projeto-database:1.0 database/.
-
-echo "Realizando o push das imagens......"
-
+docker build -t dlricarte/projeto-frontend:1.0 frontend/.
+echo "Enviando imagens para o Docker Hub..."
 docker push dlricarte/projeto-backend:1.0
 docker push dlricarte/projeto-database:1.0
-
-echo "Criando serviços no cluster kubernetes...."
-
-kubectl apply -f ./services.yml
-
-echo "Criando os deployments..........."
-
-kubectl apply -f ./deployments.yml
-
-
+docker push dlricarte/projeto-frontend:1.0
+echo "Criando volumes no Kubernetes..."
+kubectl apply -f volumes.yml
+echo "Aplicando configurações no Kubernetes..."
+kubectl apply -f services.yml
+kubectl apply -f deployments.yml
+echo "Ambiente implantado com sucesso!"
